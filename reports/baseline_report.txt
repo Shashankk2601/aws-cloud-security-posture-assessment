@@ -1,0 +1,89 @@
+============================================================
+ AWS SECURITY POSTURE ASSESSMENT — BASELINE REPORT
+ Generated : 2026-04-05 20:04:42
+ Account   : 112920804082
+ Tool      : Prowler
+============================================================
+
+EXECUTIVE SUMMARY
+----------------------------------------
+ Total checks : 240
+ PASS         : 95 (39.58%)
+ FAIL         : 141 (58.75%)
+ MANUAL       : 4
+
+SEVERITY BREAKDOWN (FAILURES ONLY)
+----------------------------------------
+ Critical    : 4
+ High        : 22
+ Medium      : 66
+ Low         : 49
+
+FAILURES BY SERVICE
+----------------------------------------
+ cloudtrail               : 36
+ iam                      : 18
+ bedrock                  : 17
+ accessanalyzer           : 17
+ config                   : 17
+ cloudwatch               : 15
+ s3                       : 11
+ organizations            : 4
+ backup                   : 1
+ account                  : 1
+ fms                      : 1
+ ssmincidents             : 1
+ trustedadvisor           : 1
+ vpc                      : 1
+
+HIGH PRIORITY FINDINGS (Critical + High)
+----------------------------------------
+ [HIGH] cloudtrail_multi_region_enabled
+ Title  : Region has at least one CloudTrail trail logging
+ Detail : No CloudTrail trails enabled with logging were found.
+
+ [CRITICAL] iam_aws_attached_policy_no_administrative_privileges
+ Title  : Attached AWS-managed IAM policy does not allow '*:*' administrative privileges
+ Detail : AWS policy AdministratorAccess is attached and allows '*:*' administrative privileges.
+
+ [CRITICAL] iam_root_hardware_mfa_enabled
+ Title  : Root account has a hardware MFA device enabled
+ Detail : MFA is not enabled for root account.
+
+ [CRITICAL] iam_root_mfa_enabled
+ Title  : Root account has MFA enabled
+ Detail : MFA is not enabled for root account.
+
+ [CRITICAL] iam_user_administrator_access_policy
+ Title  : IAM user does not have AdministratorAccess policy attached
+ Detail : IAM User prowler-audit-user has AdministratorAccess policy attached.
+
+ [HIGH] iam_user_hardware_mfa_enabled
+ Title  : IAM user has hardware MFA enabled
+ Detail : User prowler-audit-user does not have any type of MFA enabled.
+
+ [HIGH] iam_user_with_temporary_credentials
+ Title  : IAM user does not use long-lived credentials to access services other than IAM or STS
+ Detail : User prowler-audit-user has long lived credentials with access to other services than IAM or STS.
+
+ [HIGH] organizations_scp_check_deny_regions
+ Title  : AWS Organization restricts operations to only the configured AWS Regions with SCP policies
+ Detail : AWS Organizations is not in-use for this AWS Account.
+
+ [HIGH] s3_account_level_public_access_blocks
+ Title  : S3 account-level Block Public Access ignores public ACLs and restricts public buckets
+ Detail : Block Public Access is not configured for the account 112920804082.
+
+ [HIGH] s3_bucket_level_public_access_block
+ Title  : S3 bucket has Block Public Access with IgnorePublicAcls and RestrictPublicBuckets enabled at bucket or account level
+ Detail : Block Public Access is not configured for the S3 Bucket prowler-test-bucket-2601.
+
+REMEDIATION APPROACH
+----------------------------------------
+ Focus on high-impact security issues first (Critical/High).
+ Apply least privilege, enable logging, and enforce MFA.
+ Validate fixes with a follow-up security scan.
+
+============================================================
+ END OF REPORT
+============================================================
