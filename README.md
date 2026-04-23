@@ -68,7 +68,7 @@ Python Script (Filter + Prioritize HIGH/CRITICAL)
         ↓
 Manual Analysis (Top findings, attacker impact)
         ↓
-Targeted Remediation (IAM + CloudTrail + Config)
+Targeted Remediation (IAM + CloudTrail + Config + S3)
         ↓
 Prowler Re-Scan (Validation)
         ↓
