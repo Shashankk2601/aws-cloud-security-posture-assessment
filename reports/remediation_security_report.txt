@@ -1,7 +1,7 @@
 ============================================================
  AWS SECURITY POSTURE ASSESSMENT — REMEDIATION REPORT
  Generated : 2026-04-06 03:00:27
- Account   : 112920804082
+ Account   : XXXXXXXXXXXX
  Tool      : Prowler
 ============================================================
  
