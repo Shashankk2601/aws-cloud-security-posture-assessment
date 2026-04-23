@@ -1,7 +1,7 @@
 ============================================================
  AWS SECURITY POSTURE ASSESSMENT — BASELINE REPORT
  Generated : 2026-04-05 20:04:42
- Account   : 112920804082
+ Account   : XXXXXXXXXXXX
  Tool      : Prowler
 ============================================================
 
