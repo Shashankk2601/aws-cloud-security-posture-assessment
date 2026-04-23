@@ -1,4 +1,4 @@
-# AWS Security Posture Assessment & IAM Remediation
+# AWS Security Posture Assessment & Targeted Remediation (CIS Benchmark Aligned)
 
 > Automated cloud security audit using Prowler v5.22.0 with Python-based findings analysis and CIS AWS Foundations Benchmark remediation.
 
@@ -7,6 +7,8 @@
 ## Project Overview
 
 This project simulates a real-world cloud security audit on an AWS account. Using Prowler — an industry-standard open-source CSPM tool — I conducted a full security assessment across 573 checks, identified critical misconfigurations, automated findings analysis using Python, applied targeted remediations, and validated improvement through a follow-up scan.
+
+This project demonstrates practical cloud security auditing, risk prioritization, and remediation validation aligned with real-world security operations.
 
 This is the same workflow used by Cloud Security Engineers and SOC analysts performing security posture assessments in production environments.
 
@@ -44,11 +46,13 @@ aws-security-posture-assessment/
 │       └── after_remediation_report.txt    # After remediation analysis report
 │
 └── screenshots/
-    ├── 01_baseline_scan_running.png
-    ├── 02_baseline_scan_complete.png
-    ├── 03_baseline_html_report.png
-    ├── 04_python_analyzer_output.png
-    └── 05_remediation_scan_complete.png
+    ├── 01_baseline_scan.png
+    ├── 02_python_output.png
+    ├── 03_root_mfa_after.png
+    ├── 04_iam_policy_fix.png
+    ├── 05_cloudtrail_enabled.png
+    ├── 06_config_enabled.png
+    └── 07_remediation_scan.png
 ```
 
 ---
@@ -93,7 +97,8 @@ python -m prowler aws --output-formats csv html -o ./baseline-scan/
 | Medium findings | 66 |
 | Low findings | 49 |
 
-![Baseline Scan Complete](screenshots/02_baseline_scan_complete.png)
+### Baseline Scan Evidence
+![Baseline Scan Result](screenshots/01_baseline_scan.png)
 
 ---
 
@@ -111,26 +116,33 @@ python scripts/filter_findings.py
 - Exports prioritized findings to `high_priority_findings.csv`
 - Generates a formatted summary report
 
-![Python Analyzer Output](screenshots/04_python_analyzer_output.png)
+### Python Analysis Output
+![Python Findings Filter Output](screenshots/02_python_output.png)
 
 ---
 
 ## Phase 3 — Critical Findings Analysis
 
-From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were selected for remediation based on direct attacker impact:
+From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were selected for remediation based on direct attacker impact.
+
+> **Note:** While multiple high and critical findings were identified, remediation was intentionally limited to high-impact identity and logging controls to reflect real-world risk prioritization practices.
+
+---
 
 ### Finding 1 — Root Account MFA Disabled
+
 | Field | Detail |
 |---|---|
 | Check ID | `iam_root_mfa_enabled` |
 | Severity | CRITICAL |
-| CIS Control | CIS AWS 1.5 |
+| CIS Control | CIS AWS 1.1 |
 | Risk | Root account with no MFA = complete account takeover with one stolen password. Full access to all AWS services, billing, and data. |
 | Fix Applied | Enabled Virtual MFA on root account using Google Authenticator |
 
 ---
 
 ### Finding 2 — IAM User with AdministratorAccess Policy
+
 | Field | Detail |
 |---|---|
 | Check ID | `iam_user_administrator_access_policy` |
@@ -142,6 +154,7 @@ From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were se
 ---
 
 ### Finding 3 — CloudTrail Not Enabled
+
 | Field | Detail |
 |---|---|
 | Check ID | `cloudtrail_multi_region_enabled` |
@@ -168,6 +181,26 @@ From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were se
 - Configured S3 bucket for log delivery
 - Enabled log file validation
 
+### Fix 4: AWS Config
+- Enabled AWS Config for all supported resources
+- Configured resource recording and delivery channel
+
+---
+
+## Remediation Evidence
+
+### Root MFA Enabled
+![Root MFA Enabled](screenshots/03_root_mfa_after.png)
+
+### IAM Least Privilege Applied
+![IAM Policy Updated](screenshots/04_iam_policy_fix.png)
+
+### CloudTrail Enabled
+![CloudTrail Active](screenshots/05_cloudtrail_enabled.png)
+
+### AWS Config Enabled
+![AWS Config Recording](screenshots/06_config_enabled.png)
+
 ---
 
 ## Phase 5 — After Remediation Scan
@@ -188,7 +221,10 @@ python -m prowler aws --output-formats csv html -o ./remediation-scan/
 | Critical findings | 1 |
 | High findings | 5 |
 
-![Remediation Scan Complete](screenshots/05_remediation_scan_complete.png)
+### Post-Remediation Scan Evidence
+![Remediation Scan Result](screenshots/07_remediation_scan.png)
+
+Additional detailed screenshots for each remediation step are available in the `/screenshots` directory.
 
 ---
 
@@ -209,7 +245,7 @@ python -m prowler aws --output-formats csv html -o ./remediation-scan/
 
 | Finding | CIS Control | Description |
 |---|---|---|
-| Root MFA disabled | CIS 1.5 | Enable MFA for the root account |
+| Root MFA disabled | CIS 1.1 | Enable MFA for the root account |
 | AdministratorAccess on IAM user | CIS 1.16 | Ensure IAM policies are attached only to groups or roles |
 | CloudTrail not enabled | CIS 3.1 | Ensure CloudTrail is enabled in all regions |
 | AWS Config not enabled | CIS 2.5 | Ensure AWS Config is enabled in all regions |
@@ -231,7 +267,7 @@ python -m prowler aws --output-formats csv html -o ./remediation-scan/
 - S3 public access controls
 - Password policy enforcement
 
-Remaining failures after remediation are primarily enterprise-scale controls not applicable to a standalone personal AWS account, or require additional service dependencies beyond this project's scope.
+Remaining findings were intentionally not remediated in this phase, as they require organization-level controls or extended service configurations. The focus of this project was on high-impact identity and logging risks.
 
 ---
 
@@ -254,3 +290,5 @@ Cybersecurity Student | Cloud Security Enthusiast
 ---
 
 *This project was conducted on a personal AWS account in a controlled environment for educational and portfolio purposes.*
+
+*Sensitive identifiers such as AWS Account IDs and resource ARNs have been redacted to follow security best practices.*
