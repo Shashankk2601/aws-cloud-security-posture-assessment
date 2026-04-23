@@ -15,7 +15,7 @@ from datetime import datetime
 INPUT_FILE  = "prowler-output-112920804082-20260404185738.csv"
 OUTPUT_FILE = "high_priority_findings.csv"
 REPORT_FILE = "security_summary_report.txt"
-ACCOUNT_ID  = "112920804082"
+ACCOUNT_ID  = "XXXXXXXXXXXX"
 # ────────────────────────────────────────────────────────
 
 
