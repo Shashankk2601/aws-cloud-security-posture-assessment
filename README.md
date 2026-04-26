@@ -140,8 +140,6 @@ python scripts/filter_findings.py
 
 The root account cannot be restricted by IAM policies and holds unrestricted access to every service, resource, and billing function. Without MFA, it is protected only by a password. A single credential compromise — through phishing, credential stuffing, or breach exposure — results in complete, irrecoverable account takeover. There is no higher-impact finding in cloud security.
 
-![Root MFA Finding](screenshots/03_root_mfa_finding.png)
-
 ---
 
 ### Finding 2 — IAM User with AdministratorAccess
@@ -152,8 +150,6 @@ The root account cannot be restricted by IAM policies and holds unrestricted acc
 | **Severity** | 🔴 CRITICAL — CIS AWS 1.16 |
 
 The audit user held `AdministratorAccess` (`*:*`) with long-lived static access keys — maximum blast radius credentials. Any key compromise grants an attacker full administrative control instantly. An audit user requires read access only. This directly violates least privilege and represents one of the most common initial access vectors in AWS compromise scenarios.
-
-![IAM Finding](screenshots/04_iam_finding.png)
 
 ---
 
@@ -176,8 +172,6 @@ No CloudTrail trail meant every API call — IAM changes, resource creation, log
 | **Severity** | 🟠 HIGH — CIS AWS 2.1 |
 
 Without account-level Block Public Access, any bucket can be inadvertently exposed via misconfigured ACLs or policies — including buckets created in the future. Public S3 contents are indexed by scanners within hours. S3 misconfiguration is responsible for some of the largest data breaches in cloud history.
-
-![S3 Finding](screenshots/05_s3_finding.png)
 
 ---
 
