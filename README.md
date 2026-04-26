@@ -108,7 +108,7 @@ python -m prowler aws --output-formats csv html -o ./baseline-scan/
 
 A default AWS account with minimal resources failed nearly 60% of all checks — including four CRITICAL findings exploitable without elevated access.
 
-![Baseline Scan](screenshots/01_baseline_scan.png)
+<img width="1581" height="755" alt="baseline_scan" src="https://github.com/user-attachments/assets/c0f00bee-4192-45fd-83c9-d881cf2dcbb7" />
 
 ---
 
@@ -122,7 +122,8 @@ python scripts/filter_findings.py
 
 **Result:** 240 findings → **10 actionable HIGH/CRITICAL issues**
 
-![Python Output](screenshots/02_python_output.png)
+<img width="1853" height="973" alt="python_script_execution" src="https://github.com/user-attachments/assets/58cb6a04-8162-4677-bb6c-ddd0eb2c970e" />
+
 
 ---
 
@@ -190,7 +191,8 @@ Without account-level Block Public Access, any bucket can be inadvertently expos
 
 **Impact:** Eliminates single-factor root account takeover.
 
-![Root MFA After](screenshots/06_root_mfa_after.png)
+<img width="1917" height="910" alt="root_MFA_enabled" src="https://github.com/user-attachments/assets/63add1a1-1682-49ec-9254-67923210c30d" />
+
 
 ---
 
@@ -200,7 +202,8 @@ Without account-level Block Public Access, any bucket can be inadvertently expos
 
 **Impact:** Credential blast radius reduced from full admin to read-only.
 
-![IAM Fix](screenshots/07_iam_policy_fix.png)
+<img width="1918" height="836" alt="IAM_policy_fixed" src="https://github.com/user-attachments/assets/2e229905-31bf-4248-97c4-ddda996a3e56" />
+
 
 ---
 
@@ -210,7 +213,8 @@ Without account-level Block Public Access, any bucket can be inadvertently expos
 
 **Impact:** Full API visibility restored. All future account activity is now logged and tamper-evident.
 
-![CloudTrail Enabled](screenshots/08_cloudtrail_enabled.png)
+<img width="1916" height="802" alt="cloudtrail_enabled" src="https://github.com/user-attachments/assets/c1ed959a-f05f-4e7d-8805-ac130332fa38" />
+
 
 ---
 
@@ -220,7 +224,8 @@ Without account-level Block Public Access, any bucket can be inadvertently expos
 
 **Impact:** Data exposure vector closed at account and bucket level. Future buckets inherit restrictions by default.
 
-![S3 Block](screenshots/09_s3_block.png)
+<img width="1918" height="967" alt="remediation_scan" src="https://github.com/user-attachments/assets/e4094ff0-be39-4812-892e-b712b355a280" />
+
 
 ---
 
@@ -239,8 +244,7 @@ python -m prowler aws --output-formats csv html -o ./remediation-scan/
 
 > **Note:** Total findings increased from 240 to 258 — expected, not a regression. Enabling CloudTrail expanded Prowler's detectable surface. Pass rate is the correct improvement metric.
 
-![Remediation Scan](screenshots/10_remediation_scan.png)
-
+<img width="1913" height="848" alt="s3_public-access_blocked" src="https://github.com/user-attachments/assets/b04d0002-1c43-45fb-9484-1ab2d1adaac9" />
 ---
 
 ## Before vs After
