@@ -1,16 +1,18 @@
 # AWS Security Posture Assessment & Targeted Remediation (CIS Benchmark Aligned)
 
-> Automated cloud security audit using Prowler v5.22.0 with Python-based findings analysis and CIS AWS Foundations Benchmark remediation.
+> Automated cloud security audit using Prowler v5.22.0 with Python-based findings analysis, risk-prioritized remediation, and CIS AWS Foundations Benchmark validation.
 
 ---
 
 ## Project Overview
 
-This project simulates a real-world cloud security audit on an AWS account. Using Prowler — an industry-standard open-source CSPM tool — I conducted a full security assessment across 573 checks, identified critical misconfigurations, automated findings analysis using Python, applied targeted remediations, and validated improvement through a follow-up scan.
+This project conducts a full security assessment on a personal AWS account using Prowler — an industry-standard open-source Cloud Security Posture Management (CSPM) tool.
 
-This project demonstrates practical cloud security auditing, risk prioritization, and remediation validation aligned with real-world security operations.
+This workflow mirrors real-world cloud security assessments involving automated scanning, risk prioritization, targeted remediation, and validation.
 
-This is the same workflow used by Cloud Security Engineers and SOC analysts performing security posture assessments in production environments.
+The project focuses on identifying high-impact misconfigurations in identity, logging, and data exposure layers, which are commonly exploited in real-world cloud breaches.
+
+> **Security Note:** Sensitive identifiers such as AWS Account IDs and resource ARNs have been redacted from all reports and scripts to follow security best practices.
 
 ---
 
@@ -19,11 +21,11 @@ This is the same workflow used by Cloud Security Engineers and SOC analysts perf
 | Tool | Purpose |
 |---|---|
 | Prowler v5.22.0 | Cloud Security Posture Management (CSPM) |
-| Python 3 + Pandas | Findings analysis and report automation |
+| Python 3 + Pandas | Automated findings analysis and prioritization |
 | AWS IAM | Identity and access management hardening |
 | AWS CloudTrail | Audit logging and API activity monitoring |
 | AWS Config | Resource configuration recording |
-| AWS S3 | Log storage |
+| AWS S3 | Log storage and public access hardening |
 | CIS AWS Foundations Benchmark | Compliance framework for remediation mapping |
 
 ---
@@ -34,16 +36,14 @@ This is the same workflow used by Cloud Security Engineers and SOC analysts perf
 aws-security-posture-assessment/
 │
 ├── README.md
+│
 ├── scripts/
-│   └── filter_findings.py          # Python script to parse and prioritize findings
+│   └── filter_findings.py
 │
 ├── reports/
-│   ├── baseline/
-│   │   ├── prowler-output-XXXX.csv         # Raw baseline scan output
-│   │   └── security_summary_report.txt     # Baseline analysis report
-│   └── after/
-│       ├── prowler-output-XXXX.csv         # Raw after-remediation scan output
-│       └── after_remediation_report.txt    # After remediation analysis report
+│   ├── baseline_security_report.txt
+│   ├── remediation_security_report.txt
+│   └── high_critical_findings.csv
 │
 └── screenshots/
     ├── 01_baseline_scan.png
@@ -52,8 +52,11 @@ aws-security-posture-assessment/
     ├── 04_iam_policy_fix.png
     ├── 05_cloudtrail_enabled.png
     ├── 06_config_enabled.png
-    └── 07_remediation_scan.png
+    ├── 07_remediation_scan.png
+    └── 08_s3_block.png
 ```
+
+> **Note:** Raw Prowler CSV outputs are excluded from this repository as they contain account-specific resource identifiers. Sanitized summary reports are provided in the `reports/` folder instead.
 
 ---
 
@@ -64,7 +67,7 @@ AWS Account (Default Misconfigured State)
         ↓
 Prowler Baseline Scan (573 checks, all regions)
         ↓
-Python Script (Filter + Prioritize HIGH/CRITICAL)
+Python Script (Reduce noise, prioritize actionable risks)
         ↓
 Manual Analysis (Top findings, attacker impact)
         ↓
@@ -78,6 +81,8 @@ Before vs After Comparison (Proof of improvement)
 ---
 
 ## Phase 1 — Baseline Scan
+
+A full Prowler scan was executed across all AWS regions covering 573 security checks.
 
 **Command used:**
 ```powershell
@@ -98,34 +103,37 @@ python -m prowler aws --output-formats csv html -o ./baseline-scan/
 | Low findings | 49 |
 
 ### Baseline Scan Evidence
-![Baseline Scan Result](screenshots/01_baseline_scan.png)
+
+![Baseline Scan](screenshots/01_baseline_scan.png)
 
 ---
 
 ## Phase 2 — Python Findings Analysis
 
-A Python script was developed to automate the triage process — filtering 240 raw findings down to only CRITICAL and HIGH severity issues, exporting a prioritized CSV, and generating a structured summary report.
+A Python script was developed to reduce noise and prioritize actionable security risks — filtering 240 raw findings down to only CRITICAL and HIGH severity issues, exporting a prioritized CSV, and generating a structured summary report.
 
+**Command used:**
 ```bash
 python scripts/filter_findings.py
 ```
 
 **What the script does:**
-- Loads the Prowler CSV output
+- Loads Prowler CSV output
 - Filters findings by `STATUS = FAIL` and `SEVERITY = critical/high`
-- Exports prioritized findings to `high_priority_findings.csv`
-- Generates a formatted summary report
+- Exports prioritized findings to `high_critical_findings.csv`
+- Generates a formatted summary report with service breakdown
 
 ### Python Analysis Output
-![Python Findings Filter Output](screenshots/02_python_output.png)
+
+![Python Findings Output](screenshots/02_python_output.png)
 
 ---
 
 ## Phase 3 — Critical Findings Analysis
 
-From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were selected for remediation based on direct attacker impact.
+From 240 findings, 10 unique HIGH/CRITICAL issues were identified across IAM, CloudTrail, and S3 services.
 
-> **Note:** While multiple high and critical findings were identified, remediation was intentionally limited to high-impact identity and logging controls to reflect real-world risk prioritization practices.
+> **Note:** While multiple high and critical findings were identified, remediation was intentionally limited to high-impact identity, logging, and data exposure controls to reflect real-world risk prioritization practices.
 
 ---
 
@@ -136,7 +144,7 @@ From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were se
 | Check ID | `iam_root_mfa_enabled` |
 | Severity | CRITICAL |
 | CIS Control | CIS AWS 1.1 |
-| Risk | Root account with no MFA = complete account takeover with one stolen password. Full access to all AWS services, billing, and data. |
+| Risk | Root account with no MFA means complete account takeover with one stolen password — full access to all AWS services, billing, and data with no recovery path. |
 | Fix Applied | Enabled Virtual MFA on root account using Google Authenticator |
 
 ---
@@ -148,8 +156,8 @@ From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were se
 | Check ID | `iam_user_administrator_access_policy` |
 | Severity | CRITICAL |
 | CIS Control | CIS AWS 1.16 |
-| Risk | Audit user (`prowler-audit-user`) had full `AdministratorAccess` — violates least privilege principle. Long-lived credentials + admin access = high blast radius on compromise. |
-| Fix Applied | Replaced `AdministratorAccess` with `SecurityAudit` read-only policy |
+| Risk | Audit user had full AdministratorAccess — violates least privilege principle. Long-lived credentials combined with admin access creates maximum blast radius on any credential compromise. |
+| Fix Applied | Replaced AdministratorAccess with SecurityAudit read-only policy |
 
 ---
 
@@ -165,19 +173,57 @@ From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were se
 
 ---
 
+### Finding 4 — AWS Config Not Enabled
+
+| Field | Detail |
+|---|---|
+| Check ID | `config_recorder_all_regions_enabled` |
+| Severity | MEDIUM |
+| CIS Control | CIS AWS 2.5 |
+| Risk | No resource change history or configuration compliance monitoring. Misconfigurations introduced over time go undetected with no audit trail. |
+| Fix Applied | Enabled AWS Config recorder for all supported resources with delivery channel configured |
+
+---
+
+### Finding 5 — S3 Public Access Not Blocked
+
+| Field | Detail |
+|---|---|
+| Check ID | `s3_account_level_public_access_blocks` |
+| Severity | HIGH |
+| CIS Control | CIS AWS 2.1 |
+| Risk | Public S3 buckets can expose sensitive data to the internet, leading to data breaches and unauthorized access. One misconfigured bucket can expose entire datasets — one of the most common causes of cloud data breaches. |
+| Fix Applied | Enabled S3 Block Public Access at both account and bucket level |
+
+---
+
 ## Phase 4 — Remediation
 
+### Remediation Strategy
+
+Remediation focused on five controls covering the three most commonly exploited cloud attack surfaces:
+
+- **Identity compromise prevention** — Root MFA eliminates the most critical account takeover vector
+- **Privilege escalation prevention** — Least privilege IAM policy reduces blast radius of any credential compromise
+- **Visibility and detection** — CloudTrail enables forensic capability and incident response
+- **Configuration monitoring** — AWS Config establishes continuous compliance tracking
+- **Data exposure prevention** — S3 public access hardening closes the most common data breach vector
+
+Remaining findings were intentionally not remediated in this phase, as they require organization-level controls or extended service configurations beyond this project's scope.
+
+---
+
 ### Fix 1: Root MFA
-- Signed in as root user
+- Signed into AWS as root user
 - Navigated to IAM → Security credentials → MFA
 - Assigned Virtual MFA device via Google Authenticator
 
 ### Fix 2: IAM Least Privilege
-- Removed `AdministratorAccess` managed policy from `prowler-audit-user`
-- Attached `SecurityAudit` read-only policy instead
+- Removed AdministratorAccess managed policy from audit user
+- Attached SecurityAudit read-only policy instead
 
 ### Fix 3: CloudTrail
-- Created a new CloudTrail trail — all regions enabled
+- Created multi-region CloudTrail trail
 - Configured S3 bucket for log delivery
 - Enabled log file validation
 
@@ -185,25 +231,37 @@ From 240 findings, 10 unique HIGH/CRITICAL issues were identified. Three were se
 - Enabled AWS Config for all supported resources
 - Configured resource recording and delivery channel
 
+### Fix 5: S3 Public Access Hardening
+- Enabled Block All Public Access at account level
+- Applied bucket-level public access restrictions
+- Verified no public ACLs or policies remain active
+
 ---
 
 ## Remediation Evidence
 
 ### Root MFA Enabled
-![Root MFA Enabled](screenshots/03_root_mfa_after.png)
+![Root MFA](screenshots/03_root_mfa_after.png)
 
-### IAM Least Privilege Applied
-![IAM Policy Updated](screenshots/04_iam_policy_fix.png)
+### IAM Policy Fix
+![IAM Fix](screenshots/04_iam_policy_fix.png)
 
 ### CloudTrail Enabled
-![CloudTrail Active](screenshots/05_cloudtrail_enabled.png)
+![CloudTrail](screenshots/05_cloudtrail_enabled.png)
 
 ### AWS Config Enabled
-![AWS Config Recording](screenshots/06_config_enabled.png)
+![Config](screenshots/06_config_enabled.png)
+
+### S3 Public Access Blocked
+![S3 Fix](screenshots/08_s3_block.png)
+
+> Additional screenshots are available in the `/screenshots` directory.
 
 ---
 
 ## Phase 5 — After Remediation Scan
+
+A second full Prowler scan was executed using identical parameters to validate remediation effectiveness.
 
 **Command used:**
 ```powershell
@@ -221,10 +279,11 @@ python -m prowler aws --output-formats csv html -o ./remediation-scan/
 | Critical findings | 1 |
 | High findings | 5 |
 
-### Post-Remediation Scan Evidence
-![Remediation Scan Result](screenshots/07_remediation_scan.png)
+> **Note on finding count:** Total findings increased from 240 to 258 between scans. This is expected — enabling CloudTrail and AWS Config introduced new detectable resources into scope. Pass rate is the correct metric to track improvement, which increased from 39.58% to 54.26%.
 
-Additional detailed screenshots for each remediation step are available in the `/screenshots` directory.
+### Post-Remediation Scan
+
+![Final Scan](screenshots/07_remediation_scan.png)
 
 ---
 
@@ -246,38 +305,40 @@ Additional detailed screenshots for each remediation step are available in the `
 | Finding | CIS Control | Description |
 |---|---|---|
 | Root MFA disabled | CIS 1.1 | Enable MFA for the root account |
-| AdministratorAccess on IAM user | CIS 1.16 | Ensure IAM policies are attached only to groups or roles |
+| AdministratorAccess on IAM user | CIS 1.16 | Ensure IAM policies attached only to groups or roles |
 | CloudTrail not enabled | CIS 3.1 | Ensure CloudTrail is enabled in all regions |
 | AWS Config not enabled | CIS 2.5 | Ensure AWS Config is enabled in all regions |
+| S3 public access not blocked | CIS 2.1 | Ensure S3 Block Public Access is enabled |
 
 ---
 
 ## Scope & Limitations
 
-**Out of scope (not applicable to standalone accounts):**
+**Out of scope:**
 - AWS Organizations-level SCP controls — requires AWS Organizations setup
-- Firewall Manager (FMS) — requires AWS Business/Enterprise Support
-- Bedrock guardrails — AI service not in use
-- AccessAnalyzer — requires paid tier for external access analysis
+- Firewall Manager (FMS) — requires AWS Business/Enterprise Support plan
+- Bedrock guardrails — AI service not in use in this account
+- Hardware MFA — requires physical security key; virtual MFA applied instead
 
-**In scope (direct security impact):**
+**In scope:**
 - IAM identity hardening (MFA, least privilege)
 - CloudTrail audit logging
 - AWS Config resource recording
-- S3 public access controls
+- S3 public access hardening
 - Password policy enforcement
 
-Remaining findings were intentionally not remediated in this phase, as they require organization-level controls or extended service configurations. The focus of this project was on high-impact identity and logging risks.
+Remaining findings were intentionally not remediated in this phase, as they require organization-level controls or extended service configurations beyond this project's scope.
 
 ---
 
 ## Key Takeaways
 
-- A default AWS account has significant security gaps out of the box
-- Automated tooling (Prowler) surfaces findings faster than manual review
-- Python scripting can automate the triage process — reducing 240 findings to 10 actionable items
-- Remediation must be prioritized by business impact, not just finding count
-- Before/after validation is essential to prove fixes were effective
+- A default AWS account has critical security gaps out of the box — 4 critical findings with zero prior configuration
+- Automated CSPM tooling surfaces findings faster and more consistently than manual review
+- Python scripting reduces noise — from 240 raw findings to 10 actionable priorities
+- Remediation must be prioritized by risk impact, not finding count
+- Before/after validation with measurable metrics is essential to prove remediation effectiveness
+- Total finding count can increase after remediation as new services become detectable — pass rate is the correct improvement metric
 
 ---
 
@@ -285,10 +346,8 @@ Remaining findings were intentionally not remediated in this phase, as they requ
 
 **Shashank**
 Cybersecurity Student | Cloud Security Enthusiast
-- GitHub: [@Shashankk2601](https://github.com/Shashankk2601)
+GitHub: [@Shashankk2601](https://github.com/Shashankk2601)
 
 ---
 
 *This project was conducted on a personal AWS account in a controlled environment for educational and portfolio purposes.*
-
-*Sensitive identifiers such as AWS Account IDs and resource ARNs have been redacted to follow security best practices.*
