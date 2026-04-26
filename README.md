@@ -224,7 +224,7 @@ Without account-level Block Public Access, any bucket can be inadvertently expos
 
 **Impact:** Data exposure vector closed at account and bucket level. Future buckets inherit restrictions by default.
 
-<img width="1918" height="967" alt="remediation_scan" src="https://github.com/user-attachments/assets/e4094ff0-be39-4812-892e-b712b355a280" />
+<img width="1913" height="848" alt="s3_public-access_blocked" src="https://github.com/user-attachments/assets/b04d0002-1c43-45fb-9484-1ab2d1adaac9" />
 
 
 ---
@@ -244,7 +244,8 @@ python -m prowler aws --output-formats csv html -o ./remediation-scan/
 
 > **Note:** Total findings increased from 240 to 258 — expected, not a regression. Enabling CloudTrail expanded Prowler's detectable surface. Pass rate is the correct improvement metric.
 
-<img width="1913" height="848" alt="s3_public-access_blocked" src="https://github.com/user-attachments/assets/b04d0002-1c43-45fb-9484-1ab2d1adaac9" />
+<img width="1918" height="967" alt="remediation_scan" src="https://github.com/user-attachments/assets/e4094ff0-be39-4812-892e-b712b355a280" />
+
 ---
 
 ## Before vs After
