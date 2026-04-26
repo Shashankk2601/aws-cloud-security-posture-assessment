@@ -1,3 +1,4 @@
+<img width="1913" height="848" alt="s3_public-access_blocked" src="https://github.com/user-attachments/assets/99e4debe-4ba0-4b6d-a5f1-53957d2e6ea0" />
 # AWS Security Posture Assessment & Targeted Remediation (CIS Benchmark Aligned)
 
 > Automated cloud security audit using Prowler v5.22.0 with Python-based findings analysis, risk-prioritized remediation, and CIS AWS Foundations Benchmark validation.
