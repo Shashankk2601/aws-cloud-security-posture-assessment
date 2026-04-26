@@ -37,21 +37,35 @@ aws-security-posture-assessment/
 ├── README.md
 ├── scripts/
 │   └── filter_findings.py
+│
 ├── reports/
 │   ├── baseline_security_report.txt
 │   ├── remediation_security_report.txt
 │   └── high_critical_findings.csv
+│
 └── screenshots/
-    ├── 01_baseline_scan.png
-    ├── 02_python_output.png
-    ├── 03_root_mfa_finding.png
-    ├── 04_iam_finding.png
-    ├── 05_s3_finding.png
-    ├── 06_root_mfa_after.png
-    ├── 07_iam_policy_fix.png
-    ├── 08_cloudtrail_enabled.png
-    ├── 09_s3_block.png
-    └── 10_remediation_scan.png
+    │
+    ├── 01_baseline/
+    │   ├── baseline_scan.png
+    │   └── baseline_output.png
+    │
+    ├── 02_analysis/
+    │   ├── python_script_execution.png
+    │   └── filtered_findings_output.png
+    │
+    ├── 03_findings/
+    │   ├── iam_misconfig.png
+    │   └── s3_misconfig.png
+    │
+    ├── 04_remediation/
+    │   ├── root_mfa_enabled.png
+    │   ├── iam_policy_fixed.png
+    │   ├── cloudtrail_enabled.png
+    │   └── s3_public-access_blocked.png
+    │
+    └── 05_validation/
+        ├── remediation_scan.png
+        └── remediation_output.png
 ```
 
 > Raw Prowler CSV outputs are excluded — they contain account-specific resource identifiers. Sanitized reports are in `reports/`.
