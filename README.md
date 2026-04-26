@@ -35,8 +35,8 @@ The assessment targets three attack surfaces most exploited in cloud breaches: *
 aws-security-posture-assessment/
 │
 ├── README.md
-├── scripts/
-│   └── filter_findings.py
+├── script/
+│   └── filtered_findings.py
 │
 ├── reports/
 │   ├── baseline_security_report.txt
