@@ -22,7 +22,9 @@ Performed a CIS-aligned security assessment of an AWS environment using Prowler 
 **Assessment Methodology:** Baseline CSPM Assessment → Risk Prioritization → Targeted Remediation → Validation Re-Assessment
 
 **Assessment Coverage:** 573 Security Checks Across All AWS Regions
+
 ---
+
 
 ## Results at a Glance
 
