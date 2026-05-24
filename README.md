@@ -102,31 +102,35 @@ aws-security-posture-assessment/
 │
 ├── README.md
 │
-├── scripts/
-│   └── filter_findings.py
+├── script/
+│   └── filtered_findings.py
 │
 ├── reports/
 │   ├── baseline_security_report.txt
 │   ├── remediation_security_report.txt
-│   └── high_critical_findings.csv
+│   └── high_priority_findings.csv
 │
 └── screenshots/
     ├── 01_baseline/
     │   ├── baseline_scan.png
     │   └── baseline_output.png
+    │
     ├── 02_analysis/
     │   ├── python_script_execution.png
     │   └── filtered_findings_output.png
+    │
     ├── 03_findings/
-    │   ├── iam_misconfig.png
-    │   ├── s3_misconfig.png
-    │   ├── root_mfa_finding.png
-    │   └── cloudtrail_not_enabled.png
+    │   ├── root_mfa_disabled.png
+    │   ├── iam_administrator_access.png
+    │   ├── cloudtrail_not_enabled.png
+    │   └── s3_public_access_not_blocked.png
+    │
     ├── 04_remediation/
     │   ├── root_mfa_enabled.png
     │   ├── iam_policy_fixed.png
     │   ├── cloudtrail_enabled.png
     │   └── s3_public_access_blocked.png
+    │
     └── 05_validation/
         ├── remediation_scan.png
         └── remediation_output.png
