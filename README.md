@@ -13,6 +13,15 @@
 Performed a CIS-aligned security assessment of an AWS environment using Prowler (573 checks), identified high-impact IAM, CloudTrail, and S3 misconfigurations, and applied targeted remediation based on attacker impact. Security pass rate improved from 39.58% to 54.26%, with critical findings reduced by 75% and high findings reduced by 77% through focused remediation and validation.
 
 ---
+## Assessment Scope
+
+**Services Assessed:** AWS IAM · AWS CloudTrail · Amazon S3
+
+**Assessment Standard:** CIS AWS Foundations Benchmark
+
+**Assessment Methodology:** Baseline CSPM Assessment → Risk Prioritization → Targeted Remediation → Validation Re-Assessment
+
+**Assessment Coverage:** 573 Security Checks Across All AWS Regions
 
 ## Results at a Glance
 
@@ -23,28 +32,13 @@ Performed a CIS-aligned security assessment of an AWS environment using Prowler 
 | High Findings | 22 | 5 | **−17 (77%)** |
 | Failed Checks | 141 | 115 | **−26** |
 
-Four targeted fixes. 75% of critical findings resolved.
-
----
-
-## Assessment Workflow
-
-```mermaid
-flowchart TD
-    A[AWS Environment] --> B[Prowler Assessment]
-    B --> C[573 Security Checks]
-    C --> D[CSV Findings Export]
-    D --> E[Python Findings Analysis]
-    E --> F[High & Critical Findings Prioritization]
-    F --> G[Targeted Remediation]
-    G --> H[Validation Re-Scan]
-    H --> I[Security Posture Improvement]
-```
+Four targeted remediations reduced critical findings by 75%, high findings by 77%, and improved overall security posture by 14.68 percentage points.
 
 ---
 
 ## Table of Contents
 
+- [Assessment Workflow](#assessment-workflow)
 - [Overview](#overview)
 - [Project Structure](#project-structure)
 - [Methodology](#methodology)
@@ -55,8 +49,38 @@ flowchart TD
 - [Phase 5 — Re-Scan Validation](#phase-5--re-scan-validation)
 - [Before vs After](#before-vs-after)
 - [CIS Benchmark Mapping](#cis-benchmark-mapping)
-- [Scope & Limitations](#scope--limitations)
 - [Key Takeaways](#key-takeaways)
+- [Scope & Limitations](#scope--limitations)
+
+---
+
+## Assessment Workflow
+
+```mermaid
+flowchart TD
+
+A[AWS Environment]
+
+A --> B[Baseline CSPM Assessment]
+B --> C[573 Security Checks]
+
+C --> D[CIS AWS Benchmark Evaluation]
+
+D --> E[Finding Identification]
+E --> F[Python-Based Prioritization]
+
+F --> G[Identity & Access Risks]
+F --> H[Logging & Monitoring Risks]
+F --> I[Data Exposure Risks]
+
+G --> J[Targeted Remediation]
+H --> J
+I --> J
+
+J --> K[Validation Re-Assessment]
+
+K --> L[Improved Security Posture]
+```
 
 ---
 
@@ -74,24 +98,46 @@ The assessment targets three attack surfaces most exploited in cloud breaches: *
 aws-security-posture-assessment/
 │
 ├── README.md
+│
 ├── scripts/
 │   └── filter_findings.py
+│
 ├── reports/
 │   ├── baseline_security_report.txt
 │   ├── remediation_security_report.txt
 │   └── high_critical_findings.csv
+│
 └── screenshots/
-    ├── 01_baseline_scan.png
-    ├── 02_python_output.png
-    ├── 03_root_mfa_finding.png
-    ├── 04_iam_finding.png
-    ├── 05_s3_finding.png
-    ├── 06_root_mfa_after.png
-    ├── 07_iam_policy_fix.png
-    ├── 08_cloudtrail_enabled.png
-    ├── 09_s3_block.png
-    └── 10_remediation_scan.png
+    ├── 01_baseline/
+    │   ├── baseline_scan.png
+    │   └── baseline_output.png
+    ├── 02_analysis/
+    │   ├── python_script_execution.png
+    │   └── filtered_findings_output.png
+    ├── 03_findings/
+    │   ├── iam_misconfig.png
+    │   ├── s3_misconfig.png
+    │   ├── root_mfa_finding.png
+    │   └── cloudtrail_not_enabled.png
+    ├── 04_remediation/
+    │   ├── root_mfa_enabled.png
+    │   ├── iam_policy_fixed.png
+    │   ├── cloudtrail_enabled.png
+    │   └── s3_public_access_blocked.png
+    └── 05_validation/
+        ├── remediation_scan.png
+        └── remediation_output.png
 ```
+
+| Folder | Purpose |
+|---|---|
+| `scripts/` | Python automation used for findings triage and prioritization |
+| `reports/` | Sanitized assessment reports and exported findings |
+| `screenshots/01_baseline/` | Initial CSPM assessment evidence |
+| `screenshots/02_analysis/` | Python-based findings analysis |
+| `screenshots/03_findings/` | Evidence of identified security findings |
+| `screenshots/04_remediation/` | Evidence of remediation activities |
+| `screenshots/05_validation/` | Validation and post-remediation assessment results |
 
 > Raw Prowler CSV outputs are excluded — they contain account-specific resource identifiers. Sanitized reports are provided in `reports/` instead.
 
@@ -102,15 +148,15 @@ aws-security-posture-assessment/
 The assessment follows a five-phase workflow designed to mirror professional cloud security engagements — from initial discovery through validated remediation.
 
 ```
-Baseline Scan (573 checks, all regions)
+Baseline CSPM Scan (573 checks, all regions)
         ↓
-Python Triage (filter HIGH/CRITICAL, export prioritized findings)
+CIS AWS Benchmark Evaluation
         ↓
-Risk Assessment (attacker impact per finding)
+Python-Based Risk Prioritization (HIGH/CRITICAL filter)
         ↓
-Targeted Remediation (4 fixes: IAM + CloudTrail + S3)
+Targeted Remediation (Identity · Logging · Data Exposure)
         ↓
-Re-Scan Validation (before vs after metrics)
+Validation Re-Assessment (before vs after metrics)
 ```
 
 Key principle: **risk-based prioritization** — maximum security improvement per unit of effort, not exhaustive remediation.
@@ -135,7 +181,7 @@ python -m prowler aws --output-formats csv html -o ./baseline-scan/
 
 A default AWS account with minimal resources failed nearly 60% of all checks — including four CRITICAL findings exploitable without elevated access.
 
-![Baseline Scan](screenshots/01_baseline_scan.png)
+<img width="1581" height="755" alt="baseline_scan" src="https://github.com/user-attachments/assets/c0f00bee-4192-45fd-83c9-d881cf2dcbb7" />
 
 ---
 
@@ -151,13 +197,22 @@ python scripts/filter_findings.py
 
 The script applies the same filtering logic used in real SOC triage workflows — cut through volume, surface what matters, act on what has impact.
 
-![Python Output](screenshots/02_python_output.png)
+<img width="1853" height="973" alt="python_script_execution" src="https://github.com/user-attachments/assets/58cb6a04-8162-4677-bb6c-ddd0eb2c970e" />
+
 
 ---
 
 ## Phase 3 — Critical Findings
 
 > Remediation was intentionally scoped to four findings with the highest attacker impact, reflecting real-world risk prioritization over exhaustive compliance.
+
+**Supporting Evidence**
+
+Supporting evidence for identified findings is available in `screenshots/03_findings/`:
+- `root_mfa_finding.png`
+- `iam_misconfig.png`
+- `cloudtrail_not_enabled.png`
+- `s3_misconfig.png`
 
 ---
 
@@ -173,8 +228,6 @@ The root account cannot be restricted by IAM policies and holds unrestricted acc
 
 **Remediation:** Enabled Virtual MFA on the root account.
 
-![Root MFA Finding](screenshots/03_root_mfa_finding.png)
-
 ---
 
 ### Finding 2 — IAM User with AdministratorAccess
@@ -188,8 +241,6 @@ The root account cannot be restricted by IAM policies and holds unrestricted acc
 The audit user held `AdministratorAccess` (`*:*`) with long-lived static access keys — maximum blast radius credentials. Any key compromise grants an attacker full administrative control instantly. An audit user requires read access only. This directly violates least privilege and represents one of the most common initial access vectors in AWS compromise scenarios.
 
 **Remediation:** Removed AdministratorAccess and applied SecurityAudit read-only policy.
-
-![IAM Finding](screenshots/04_iam_finding.png)
 
 ---
 
@@ -219,8 +270,6 @@ Without account-level Block Public Access, any bucket can be inadvertently expos
 
 **Remediation:** Enabled account-level Block Public Access across all four controls.
 
-![S3 Finding](screenshots/05_s3_finding.png)
-
 ---
 
 ## Phase 4 — Remediation & Evidence
@@ -236,7 +285,7 @@ Remediation was ordered by attack surface priority: **identity first, logging se
 
 **Impact:** Eliminates single-factor root account takeover.
 
-![Root MFA After](screenshots/06_root_mfa_after.png)
+<img width="1917" height="910" alt="root_MFA_enabled" src="https://github.com/user-attachments/assets/63add1a1-1682-49ec-9254-67923210c30d" />
 
 ---
 
@@ -246,7 +295,7 @@ Remediation was ordered by attack surface priority: **identity first, logging se
 
 **Impact:** Credential blast radius reduced from full admin to read-only access.
 
-![IAM Fix](screenshots/07_iam_policy_fix.png)
+<img width="1918" height="836" alt="IAM_policy_fixed" src="https://github.com/user-attachments/assets/2e229905-31bf-4248-97c4-ddda996a3e56" />
 
 ---
 
@@ -256,7 +305,7 @@ Remediation was ordered by attack surface priority: **identity first, logging se
 
 **Impact:** Full API visibility restored. All account activity is now logged and tamper-evident.
 
-![CloudTrail Enabled](screenshots/08_cloudtrail_enabled.png)
+<img width="1916" height="802" alt="cloudtrail_enabled" src="https://github.com/user-attachments/assets/c1ed959a-f05f-4e7d-8805-ac130332fa38" />
 
 ---
 
@@ -267,7 +316,7 @@ Remediation was ordered by attack surface priority: **identity first, logging se
 
 **Impact:** Data exposure vector closed at both account and bucket level. Future buckets inherit restrictions by default.
 
-![S3 Block](screenshots/09_s3_block.png)
+<img width="1913" height="848" alt="s3_public-access_blocked" src="https://github.com/user-attachments/assets/b04d0002-1c43-45fb-9484-1ab2d1adaac9" />
 
 ---
 
@@ -286,7 +335,7 @@ python -m prowler aws --output-formats csv html -o ./remediation-scan/
 
 > **Note on finding count:** Total findings increased from 240 to 258 — expected, not a regression. Enabling CloudTrail introduced new detectable resources into Prowler's scope. Pass rate is the correct improvement metric.
 
-![Remediation Scan](screenshots/10_remediation_scan.png)
+<img width="1918" height="967" alt="remediation_scan" src="https://github.com/user-attachments/assets/e4094ff0-be39-4812-892e-b712b355a280" />
 
 ---
 
@@ -316,6 +365,16 @@ Four fixes resolved 75% of critical findings and 77% of high findings — the ca
 
 ---
 
+## Key Takeaways
+
+- **Default AWS accounts fail ~60% of security checks** without any prior hardening
+- **Four fixes resolved 75% of critical risk** — risk-based prioritization outperforms exhaustive remediation
+- **Python automation cut triage time significantly** — 240 findings reduced to 10 actionable priorities
+- **Logging is foundational** — without CloudTrail, no other security control can be investigated after the fact
+- **Finding count can increase post-remediation** — enabling services expands detectable scope; pass rate is the correct metric
+
+---
+
 ## Scope & Limitations
 
 The following findings were intentionally excluded — not because they were overlooked, but because they are inapplicable to a standalone personal account:
@@ -328,17 +387,32 @@ The following findings were intentionally excluded — not because they were ove
 The 115 remaining failures post-remediation are almost entirely composed of these enterprise-scale controls. All four in-scope findings — those with direct, exploitable attacker impact — were fully resolved.
 
 ---
+## Skills Demonstrated
 
-## Key Takeaways
+### Cloud Security
+- Cloud Security Posture Management (CSPM)
+- AWS IAM Security Controls
+- AWS CloudTrail Configuration & Validation
+- Amazon S3 Security Hardening
+- CIS AWS Foundations Benchmark Assessment
 
-- **Default AWS accounts fail ~60% of security checks** without any prior hardening
-- **Four fixes resolved 75% of critical risk** — risk-based prioritization outperforms exhaustive remediation
-- **Python automation cut triage time significantly** — 240 findings reduced to 10 actionable priorities
-- **Logging is foundational** — without CloudTrail, no other security control can be investigated after the fact
-- **Finding count can increase post-remediation** — enabling services expands detectable scope; pass rate is the correct metric
+### Security Analysis
+- Security Findings Triage
+- Risk-Based Prioritization
+- Misconfiguration Analysis
+- Security Validation & Reporting
 
----
+### Automation
+- Python Data Analysis
+- CSV Processing & Findings Filtering
+- Security Assessment Reporting
 
+### Security Operations Mindset
+- Attack Surface Identification
+- Risk Assessment
+- Remediation Planning
+- Security Posture Improvement Measurement
+  
 ## Author
 
 **Shashank** · Cybersecurity Student · Cloud Security Enthusiast
