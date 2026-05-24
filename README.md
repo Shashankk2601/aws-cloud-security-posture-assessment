@@ -52,6 +52,7 @@ Four targeted remediations reduced critical findings by 75%, high findings by 77
 - [Phase 5 — Re-Scan Validation](#phase-5--re-scan-validation)
 - [Before vs After](#before-vs-after)
 - [CIS Benchmark Mapping](#cis-benchmark-mapping)
+- [Skills Demonstrated](#skills-demonstrated)
 - [Key Takeaways](#key-takeaways)
 - [Scope & Limitations](#scope--limitations)
 
@@ -372,28 +373,6 @@ Four fixes resolved 75% of critical findings and 77% of high findings — the ca
 
 ---
 
-## Key Takeaways
-
-- **Default AWS accounts fail ~60% of security checks** without any prior hardening
-- **Four fixes resolved 75% of critical risk** — risk-based prioritization outperforms exhaustive remediation
-- **Python automation cut triage time significantly** — 240 findings reduced to 10 actionable priorities
-- **Logging is foundational** — without CloudTrail, no other security control can be investigated after the fact
-- **Finding count can increase post-remediation** — enabling services expands detectable scope; pass rate is the correct metric
-
----
-
-## Scope & Limitations
-
-The following findings were intentionally excluded — not because they were overlooked, but because they are inapplicable to a standalone personal account:
-
-- **AWS Organizations SCP controls** — only available within an AWS Organization. A standalone account cannot implement these regardless of configuration effort.
-- **Firewall Manager (FMS)** — requires AWS Business or Enterprise Support subscription. Not available on personal accounts.
-- **Hardware MFA** — CIS recommends hardware MFA for root accounts. Virtual MFA was applied instead, which satisfies the control intent for a personal account environment.
-- **AccessAnalyzer, Bedrock guardrails, CloudWatch metric filters** — legitimate production controls that fall outside the identity, logging, and data exposure scope of this assessment.
-
-The 115 remaining failures post-remediation are almost entirely composed of these enterprise-scale controls. All four in-scope findings — those with direct, exploitable attacker impact — were fully resolved.
-
----
 ## Skills Demonstrated
 
 ### Cloud Security
@@ -419,6 +398,31 @@ The 115 remaining failures post-remediation are almost entirely composed of thes
 - Risk Assessment
 - Remediation Planning
 - Security Posture Improvement Measurement
+
+---
+
+## Key Takeaways
+
+- **Default AWS accounts fail ~60% of security checks** without any prior hardening
+- **Four fixes resolved 75% of critical risk** — risk-based prioritization outperforms exhaustive remediation
+- **Python automation cut triage time significantly** — 240 findings reduced to 10 actionable priorities
+- **Logging is foundational** — without CloudTrail, no other security control can be investigated after the fact
+- **Finding count can increase post-remediation** — enabling services expands detectable scope; pass rate is the correct metric
+
+---
+
+## Scope & Limitations
+
+The following findings were intentionally excluded — not because they were overlooked, but because they are inapplicable to a standalone personal account:
+
+- **AWS Organizations SCP controls** — only available within an AWS Organization. A standalone account cannot implement these regardless of configuration effort.
+- **Firewall Manager (FMS)** — requires AWS Business or Enterprise Support subscription. Not available on personal accounts.
+- **Hardware MFA** — CIS recommends hardware MFA for root accounts. Virtual MFA was applied instead, which satisfies the control intent for a personal account environment.
+- **AccessAnalyzer, Bedrock guardrails, CloudWatch metric filters** — legitimate production controls that fall outside the identity, logging, and data exposure scope of this assessment.
+
+The 115 remaining failures post-remediation are almost entirely composed of these enterprise-scale controls. All four in-scope findings — those with direct, exploitable attacker impact — were fully resolved.
+
+---
   
 ## Author
 
