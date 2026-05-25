@@ -58,37 +58,6 @@ Four targeted remediations reduced critical findings by 75%, high findings by 77
 
 ---
 
-## Assessment Workflow
-
-```mermaid
-flowchart TD
-
-A[AWS Environment]:::scope
-
-A --> B[Baseline CSPM Assessment\nProwler v5 · 573 Checks · All Regions]:::assess
-B --> C[CIS AWS Foundations Benchmark Evaluation]:::assess
-
-C --> D[Risk Identification & Classification]:::risk
-
-D --> E[Identity Security Risks]:::finding
-D --> F[Logging & Monitoring Risks]:::finding
-D --> G[Data Exposure Risks]:::finding
-
-E --> H[Python-Based Findings Prioritization\nCRITICAL & HIGH Findings]:::analysis
-F --> H
-G --> H
-
-H --> I[Attacker Impact Assessment\nExploitability · Blast Radius · Business Impact]:::analysis
-
-I --> J[Targeted Remediation\nRisk-Driven Approach]:::remediate
-
-J --> K[Validation Re-Assessment\nPost-Remediation Verification]:::validate
-
-K --> L[Security Posture Improvement\nCritical −75% · High −77% · Pass Rate +14.68pp]:::result
-```
-
----
-
 ## Overview
 
 This project conducts a structured security posture assessment on a personal AWS account using Prowler — an industry-standard CSPM tool. The workflow follows a real-world cloud security engagement model: automated baseline scan → Python-based triage → risk-prioritized remediation → validated re-scan.
@@ -100,7 +69,7 @@ The assessment targets three attack surfaces most exploited in cloud breaches: *
 ## Project Structure
 
 ```
-aws-security-posture-assessment/
+aws-cloud-security-posture-assessment/
 │
 ├── README.md
 │
