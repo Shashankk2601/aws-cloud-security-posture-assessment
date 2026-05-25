@@ -41,7 +41,6 @@ Four targeted remediations reduced critical findings by 75%, high findings by 77
 
 ## Table of Contents
 
-- [Assessment Workflow](#assessment-workflow)
 - [Overview](#overview)
 - [Project Structure](#project-structure)
 - [Methodology](#methodology)
