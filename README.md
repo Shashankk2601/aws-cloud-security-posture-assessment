@@ -63,27 +63,28 @@ Four targeted remediations reduced critical findings by 75%, high findings by 77
 ```mermaid
 flowchart TD
 
-A[AWS Environment]
+A[AWS Environment]:::scope
 
-A --> B[Baseline CSPM Assessment]
-B --> C[573 Security Checks]
+A --> B[Baseline CSPM Assessment\nProwler v5 · 573 Checks · All Regions]:::assess
+B --> C[CIS AWS Foundations Benchmark Evaluation]:::assess
 
-C --> D[CIS AWS Benchmark Evaluation]
+C --> D[Risk Identification & Classification]:::risk
 
-D --> E[Finding Identification]
-E --> F[Python-Based Prioritization]
+D --> E[Identity Security Risks]:::finding
+D --> F[Logging & Monitoring Risks]:::finding
+D --> G[Data Exposure Risks]:::finding
 
-F --> G[Identity & Access Risks]
-F --> H[Logging & Monitoring Risks]
-F --> I[Data Exposure Risks]
+E --> H[Python-Based Findings Prioritization\nCRITICAL & HIGH Findings]:::analysis
+F --> H
+G --> H
 
-G --> J[Targeted Remediation]
-H --> J
-I --> J
+H --> I[Attacker Impact Assessment\nExploitability · Blast Radius · Business Impact]:::analysis
 
-J --> K[Validation Re-Assessment]
+I --> J[Targeted Remediation\nRisk-Driven Approach]:::remediate
 
-K --> L[Improved Security Posture]
+J --> K[Validation Re-Assessment\nPost-Remediation Verification]:::validate
+
+K --> L[Security Posture Improvement\nCritical −75% · High −77% · Pass Rate +14.68pp]:::result
 ```
 
 ---
